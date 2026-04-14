@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Jonas &amp; Judith</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,9 +14,15 @@
   </head>
   <body>
     <div id="splash" class="splash">
-      <div class="splash__inner">
-        <img src="accueil.png" alt="Jonas et Judith — invitation" width="1080" height="1920" decoding="async" />
-      </div>
+      <img
+        class="splash__img"
+        src="accueil1.png"
+        alt="Jonas et Judith — invitation"
+        width="1080"
+        height="1920"
+        decoding="async"
+        fetchpriority="high"
+      />
     </div>
 
     <main id="main" class="main">

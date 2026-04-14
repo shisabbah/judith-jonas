@@ -1,4 +1,22 @@
 (function () {
+  // Hauteur viewport réelle (téléphones : 100vh est souvent faux avant / après barre d’adresse)
+  function setAppHeight() {
+    var h =
+      window.visualViewport && window.visualViewport.height
+        ? window.visualViewport.height
+        : window.innerHeight;
+    document.documentElement.style.setProperty("--app-height", h + "px");
+  }
+
+  setAppHeight();
+  window.addEventListener("resize", setAppHeight);
+  window.addEventListener("orientationchange", setAppHeight);
+  window.addEventListener("load", setAppHeight);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", setAppHeight);
+    window.visualViewport.addEventListener("scroll", setAppHeight);
+  }
+
   // Décompte jusqu’au début du 20 août 2026 (heure locale)
   const WEDDING_TARGET = new Date(2026, 7, 20, 0, 0, 0, 0);
 
