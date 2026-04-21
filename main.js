@@ -212,17 +212,9 @@
     }, 850);
   }
 
+  /* <button type="button"> : clic et activation clavier sans doublon keydown */
   if (splash) {
     splash.addEventListener("click", openMain);
-    splash.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openMain();
-      }
-    });
-    splash.setAttribute("tabindex", "0");
-    splash.setAttribute("role", "button");
-    splash.setAttribute("aria-label", "Ouvrir l’invitation");
   }
 
   function pad(n) {

@@ -3,7 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Jonas &amp; Judith</title>
+    <title>Mariage Judith &amp; Jonas</title>
+    <meta name="description" content="Mariage Judith Jonas — invitation." />
+    <!-- Aperçu lien (WhatsApp, iMessage…) : URL relative résolue par rapport à la page publiée -->
+    <meta property="og:title" content="Mariage Judith Jonas" />
+    <meta property="og:description" content="Invitation au mariage de Judith et Jonas." />
+    <meta property="og:image" content="logo-lien.png" />
+    <meta property="og:image:alt" content="Judith et Jonas — monogramme" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mariage Judith Jonas" />
+    <meta name="twitter:description" content="Invitation au mariage de Judith et Jonas." />
+    <meta name="twitter:image" content="logo-lien.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,17 +25,22 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="splash" class="splash">
-      <img
-        class="splash__img"
-        src="accueil1.png"
-        alt="Jonas et Judith — invitation"
-        width="1080"
-        height="1920"
-        decoding="async"
-        fetchpriority="high"
-      />
-    </div>
+    <button type="button" id="splash" class="splash" aria-label="Ouvrir l’invitation">
+      <span class="splash__inner">
+        <img
+          class="splash__logo"
+          src="logo.png"
+          alt=""
+          aria-hidden="true"
+          width="560"
+          height="560"
+          decoding="async"
+          fetchpriority="high"
+          draggable="false"
+        />
+        <span class="splash__hint" aria-hidden="true">Toucher pour ouvrir</span>
+      </span>
+    </button>
 
     <main id="main" class="main">
       <section class="countdown" aria-label="Décompte avant le mariage" aria-live="polite">
