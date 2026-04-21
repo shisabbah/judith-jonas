@@ -1,7 +1,7 @@
 (function () {
   /**
    * ─── Google Sheets (recommandé) ───
-   * Feuille : https://docs.google.com/spreadsheets/d/1iPO-9Uw9euOTOcM8pgetefg0dnAtEnwx9dfp4sTI3Ww/edit
+   * Feuille : https://docs.google.com/spreadsheets/d/1iPO-9Uw9euOToCM8pgetefg0dnAtEnwx9dfp4sT13Ww/edit
    * 1. Copie apps-script/Code.gs dans Extensions → Apps Script de cette feuille.
    * 2. Déploie comme application Web (voir commentaires dans Code.gs).
    * 3. Colle l’URL /exec dans webAppUrl ci‑dessous.
@@ -12,7 +12,7 @@
   var GOOGLE_SHEETS_CONFIG = {
     /** URL du déploiement Apps Script se terminant par /exec */
     webAppUrl:
-      "https://script.google.com/macros/s/AKfycbya6kwMQbxg6Itx7EHkb1iHGrF0lrE-GpPo8iXc4Rm8e8e6fkPW6gEcxOaufCDgCGEL/exec",
+      "https://script.google.com/macros/s/AKfycbwvF3DjXG7MDdOUnCEg_VHknaBadjbjtRWTYJ-ge4b_LR2M1E7QfycvzfLwasRQ_Jg/exec",
     /** Optionnel : même valeur que la propriété RSVP_SECRET dans Apps Script. Si la propriété existe mais que ce champ est vide, tout envoi est refusé (denied). */
     secretToken: "",
   };
@@ -54,6 +54,11 @@
     }, 4000);
   }
 
+  /**
+   * Envoi vers Apps Script : GET via formulaire vers une fenêtre nommée (navigation complète, pas iframe / pas img).
+   * Les requêtes img (Sec-Fetch-Dest: image) peuvent ne pas exécuter doGet comme un vrai GET « document ».
+   * Un petit onglet affiche « ok » ou « error » — vous pouvez le fermer ; la ligne doit apparaître dans la Sheet.
+   */
   function submitToSheets(formEl) {
     var url = GOOGLE_SHEETS_CONFIG.webAppUrl;
     if (!url || typeof url !== "string" || url.indexOf("http") !== 0) {
@@ -62,47 +67,40 @@
     }
 
     var fd = new FormData(formEl);
-    var params = new URLSearchParams();
+    var baseUrl = url.split("?")[0];
+
+    var form = document.createElement("form");
+    form.method = "GET";
+    form.action = baseUrl;
+    form.target = "jj_gs_rsvp";
+    form.acceptCharset = "UTF-8";
+    form.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
+    form.setAttribute("aria-hidden", "true");
+
+    function addField(name, value) {
+      var inp = document.createElement("input");
+      inp.type = "hidden";
+      inp.name = name;
+      inp.value = value != null ? String(value) : "";
+      form.appendChild(inp);
+    }
+
     FIELD_NAMES.forEach(function (name) {
-      params.append(name, (fd.get(name) != null ? fd.get(name) : "").toString());
+      addField(name, fd.get(name));
     });
     var tok = GOOGLE_SHEETS_CONFIG.secretToken;
     if (tok && String(tok).trim() !== "") {
-      params.append("token", String(tok));
+      addField("token", tok);
     }
+    addField("_ts", String(Date.now()));
 
-    function fallbackIframe() {
-      postFormToUrl(formEl, url, function (postForm) {
-        FIELD_NAMES.forEach(function (name) {
-          var input = document.createElement("input");
-          input.type = "hidden";
-          input.name = name;
-          input.value = (fd.get(name) != null ? fd.get(name) : "").toString();
-          postForm.appendChild(input);
-        });
-        if (tok && String(tok).trim() !== "") {
-          var t = document.createElement("input");
-          t.type = "hidden";
-          t.name = "token";
-          t.value = String(tok);
-          postForm.appendChild(t);
-        }
-      });
-    }
-
-    /* fetch + URLSearchParams : plus fiable que iframe vers script.google.com (redirections qui perdent le POST) */
-    if (typeof fetch !== "undefined") {
-      fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        body: params,
-      }).catch(function (err) {
-        console.warn("[RSVP] fetch échoué, essai iframe :", err);
-        fallbackIframe();
-      });
-    } else {
-      fallbackIframe();
-    }
+    document.body.appendChild(form);
+    form.submit();
+    window.setTimeout(function () {
+      if (form.parentNode) {
+        form.parentNode.removeChild(form);
+      }
+    }, 0);
   }
 
   var GOOGLE_FORM_CONFIG = {
@@ -171,22 +169,34 @@
 
   window.myFunction = myFunction;
 
-  // Hauteur viewport réelle (téléphones : 100vh est souvent faux avant / après barre d’adresse)
+  // Hauteur viewport réelle — sans écouter « scroll » du visualViewport (spam au clavier → INP élevé)
+  var lastAppHeightPx = -1;
+  var heightRaf = null;
+
   function setAppHeight() {
     var h =
       window.visualViewport && window.visualViewport.height
         ? window.visualViewport.height
         : window.innerHeight;
+    if (h === lastAppHeightPx) return;
+    lastAppHeightPx = h;
     document.documentElement.style.setProperty("--app-height", h + "px");
   }
 
+  function scheduleAppHeight() {
+    if (heightRaf != null) return;
+    heightRaf = requestAnimationFrame(function () {
+      heightRaf = null;
+      setAppHeight();
+    });
+  }
+
   setAppHeight();
-  window.addEventListener("resize", setAppHeight);
-  window.addEventListener("orientationchange", setAppHeight);
-  window.addEventListener("load", setAppHeight);
+  window.addEventListener("resize", scheduleAppHeight, { passive: true });
+  window.addEventListener("orientationchange", scheduleAppHeight);
+  window.addEventListener("load", scheduleAppHeight);
   if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", setAppHeight);
-    window.visualViewport.addEventListener("scroll", setAppHeight);
+    window.visualViewport.addEventListener("resize", scheduleAppHeight, { passive: true });
   }
 
   // Décompte jusqu’au début du 20 août 2026 (heure locale)

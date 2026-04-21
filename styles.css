@@ -61,7 +61,6 @@ body::before {
   overflow: hidden;
   cursor: pointer;
   transition: transform var(--splash-duration) var(--splash-ease);
-  will-change: transform;
   isolation: isolate;
   background-color: var(--cream);
   display: flex;
@@ -75,6 +74,7 @@ body::before {
   height: auto;
   max-width: 100%;
   max-height: 100%;
+  aspect-ratio: 1080 / 1920;
   object-fit: contain;
   object-position: center;
   user-select: none;
@@ -298,6 +298,7 @@ body::before {
 }
 
 .rsvp__card {
+  contain: layout style;
   border-radius: 20px;
   border: 1px solid var(--gold-soft);
   background: linear-gradient(
@@ -384,7 +385,8 @@ body::before {
   background: rgba(255, 255, 255, 0.65);
   border: 1px solid var(--gold-soft);
   border-radius: 8px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  /* Pas de transition sur box-shadow (coûteux au focus / INP) */
+  transition: border-color 0.12s ease;
 }
 
 .rsvp__input:focus {
