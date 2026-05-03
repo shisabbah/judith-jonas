@@ -1,5 +1,5 @@
-# Jekyll (GitHub Pages) — utilisé pour les URLs absolues des aperçus de liens (og:image, etc.)
-# Si vous changez de domaine ou passez en site à la racine, modifiez ces deux lignes puis redéployez.
+# Jekyll (GitHub Pages). Les balises Open Graph sont dans index.html (URLs en dur, pas de Liquid).
+# Adapter url / baseurl si besoin (assets, permaliens).
 title: "Mariage Judith & Jonas"
 url: "https://shisabbah.github.io"
 baseurl: "/judith-jonas"
