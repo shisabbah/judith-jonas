@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <button type="button" id="splash" class="splash" aria-label="Ouvrir l’invitation">
+    <button type="button" id="splash" class="splash" aria-label="Ouvrir l’invitation" aria-live="polite">
       <img
         class="splash__bg"
         src="img.jpg"
@@ -48,7 +48,7 @@
           fetchpriority="high"
           draggable="false"
         />
-        <span class="splash__hint" aria-hidden="true">Toucher pour ouvrir</span>
+        <span id="splash-thanks" class="splash__thanks" hidden aria-hidden="true">Merci pour votre confirmation.</span>
       </span>
     </button>
 
@@ -85,7 +85,7 @@
       </section>
 
       <div class="invitations">
-        <figure class="invitation-block">
+        <figure class="invitation-block invitation-block--transparent">
           <figcaption class="invitation-block__title">Mairie</figcaption>
           <img src="mairie.png" alt="Invitation mairie — cérémonie civile" width="1080" height="1920" loading="lazy" decoding="async" />
         </figure>
@@ -163,9 +163,6 @@
           </form>
         </div>
 
-        <div id="rsvp-success" class="rsvp__success" hidden role="status" aria-live="polite">
-          <p class="rsvp__success-text">Merci pour votre confirmation.</p>
-        </div>
       </section>
     </main>
 

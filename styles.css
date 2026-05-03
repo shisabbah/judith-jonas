@@ -133,16 +133,27 @@ button.splash {
   animation: splash-logo-in 1.1s var(--splash-ease) both;
 }
 
-.splash__hint {
-  font-family: "Montserrat", system-ui, sans-serif;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: #fffefb;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+.splash__thanks[hidden] {
+  display: none !important;
+  animation: none !important;
   opacity: 0;
-  animation: splash-hint-in 0.65s ease 0.65s forwards;
+}
+
+.splash__thanks:not([hidden]) {
+  display: block;
+  margin: 0;
+  font-family: "Cormorant Garamond", "Georgia", serif;
+  font-size: clamp(1.35rem, 4.2vw, 1.75rem);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-align: center;
+  color: #fffefb;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.5);
+  max-width: 18ch;
+  opacity: 0;
+  animation: splash-hint-in 0.65s ease 0.35s forwards;
 }
 
 @keyframes splash-logo-in {
@@ -178,9 +189,9 @@ button.splash {
     animation: splash-logo-in-short 0.35s ease both;
   }
 
-  .splash__hint {
+  .splash__thanks:not([hidden]) {
     animation: none;
-    opacity: 0.78;
+    opacity: 0.95;
   }
 
   .splash.is-away {
@@ -225,49 +236,61 @@ button.splash {
   padding: clamp(1.5rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 8vw, 5rem);
 }
 
-/* Décompte — carte + cercles */
+/* Décompte — sobre, fusionné au fond (sans carte ni cercles) */
 .countdown {
-  max-width: 520px;
-  margin: 0 auto 3.25rem;
-  padding: 0 0.25rem;
+  position: relative;
+  max-width: 560px;
+  margin: 0 auto clamp(2.25rem, 6vw, 3.25rem);
+  padding: clamp(1.85rem, 5vw, 2.65rem) clamp(0.5rem, 3vw, 1rem);
+}
+
+.countdown::before,
+.countdown::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(280px, 78%);
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(197, 160, 89, 0.22) 35%,
+    rgba(197, 160, 89, 0.28) 50%,
+    rgba(197, 160, 89, 0.22) 65%,
+    transparent 100%
+  );
+}
+
+.countdown::before {
+  top: 0;
+}
+
+.countdown::after {
+  bottom: 0;
 }
 
 .countdown__card {
   text-align: center;
-  padding: clamp(1.75rem, 5vw, 2.5rem) clamp(1.25rem, 4vw, 2rem);
-  border-radius: 20px;
-  background: linear-gradient(
-    165deg,
-    #fffefb 0%,
-    var(--cream) 42%,
-    #ebe4d9 100%
-  );
-  border: 1px solid var(--gold-soft);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.85) inset,
-    0 12px 40px rgba(61, 43, 31, 0.07),
-    0 2px 8px rgba(61, 43, 31, 0.04);
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .countdown__card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(120px, 40%);
-  height: 3px;
-  border-radius: 0 0 6px 6px;
-  background: linear-gradient(90deg, transparent, var(--gold-mid), transparent);
-  opacity: 0.9;
+  display: none;
 }
 
 .countdown__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(0.65rem, 3vw, 1.15rem);
+  gap: clamp(0.35rem, 2vw, 0.85rem);
   align-items: start;
   position: relative;
   z-index: 1;
@@ -277,42 +300,65 @@ button.splash {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.45rem;
+  position: relative;
+  padding: 0 clamp(0.35rem, 1.8vw, 0.85rem);
+}
+
+@media (min-width: 481px) {
+  .countdown__unit:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.15rem;
+    bottom: 0.15rem;
+    width: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(197, 160, 89, 0.18) 25%,
+      rgba(197, 160, 89, 0.22) 50%,
+      rgba(197, 160, 89, 0.18) 75%,
+      transparent 100%
+    );
+  }
 }
 
 .countdown__circle {
-  width: min(100%, 5.25rem);
-  aspect-ratio: 1;
-  max-width: 5.25rem;
-  margin: 0 auto;
-  border-radius: 50%;
+  width: auto;
+  max-width: none;
+  aspect-ratio: auto;
+  margin: 0;
+  min-height: unset;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #fffefb 0%, var(--cream-dark) 100%);
-  border: 1.5px solid var(--gold-mid);
-  box-shadow:
-    0 2px 0 rgba(255, 255, 255, 0.9) inset,
-    0 6px 18px rgba(61, 43, 31, 0.08);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .countdown__value {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.35rem, 5.2vw, 1.85rem);
-  font-weight: 600;
+  font-size: clamp(1.65rem, 6.5vw, 2.5rem);
+  font-weight: 500;
   line-height: 1;
   color: var(--text);
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  opacity: 0.88;
 }
 
 .countdown__label {
   font-family: "Montserrat", system-ui, sans-serif;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--text);
-  opacity: 0.55;
+  opacity: 0.38;
 }
 
 /* Sections invitations */
@@ -554,34 +600,21 @@ button.splash {
   transform: translateY(1px);
 }
 
-.rsvp__success {
-  text-align: center;
-  padding: clamp(2rem, 5vw, 2.75rem) 1.5rem;
-  border-radius: 20px;
-  border: 1px solid var(--gold-soft);
-  background: linear-gradient(165deg, #fffefb 0%, var(--cream) 42%, #ebe4d9 100%);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.85) inset,
-    0 12px 40px rgba(61, 43, 31, 0.07);
-}
-
-.rsvp__success-text {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.35rem, 4vw, 1.65rem);
-  font-weight: 600;
-  font-style: italic;
-  color: var(--text);
-  margin: 0;
-  letter-spacing: 0.02em;
-}
-
 @media (max-width: 480px) {
   .countdown__grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem 0.85rem;
+    gap: clamp(1.1rem, 4vw, 1.5rem) clamp(0.65rem, 3vw, 1rem);
   }
 
-  .countdown__circle {
-    max-width: 4.75rem;
+  .countdown__unit::before {
+    display: none;
+  }
+
+  .countdown__unit:nth-child(odd) {
+    padding-right: clamp(0.5rem, 3vw, 0.85rem);
+  }
+
+  .countdown__unit:nth-child(even) {
+    padding-left: clamp(0.5rem, 3vw, 0.85rem);
   }
 }

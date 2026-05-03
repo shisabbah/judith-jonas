@@ -203,12 +203,45 @@
   const WEDDING_TARGET = new Date(2026, 7, 20, 0, 0, 0, 0);
 
   const splash = document.getElementById("splash");
+  var splashDefaultAriaLabel = splash ? splash.getAttribute("aria-label") : "";
+  var splashThanksEl = document.getElementById("splash-thanks");
+
+  function resetSplashThanksState() {
+    if (splash) {
+      splash.classList.remove("splash--thanks");
+      if (splashDefaultAriaLabel) splash.setAttribute("aria-label", splashDefaultAriaLabel);
+    }
+    if (splashThanksEl) {
+      splashThanksEl.hidden = true;
+      splashThanksEl.setAttribute("aria-hidden", "true");
+      splashThanksEl.removeAttribute("role");
+    }
+  }
+
+  function showSplashThanks() {
+    if (!splash || !splashThanksEl) return;
+    splash.removeAttribute("hidden");
+    splash.classList.remove("is-away");
+    splash.classList.add("splash--thanks");
+    splashThanksEl.hidden = false;
+    splashThanksEl.removeAttribute("aria-hidden");
+    splashThanksEl.setAttribute("role", "status");
+    splash.setAttribute(
+      "aria-label",
+      "Merci pour votre confirmation — toucher pour revenir à l’invitation"
+    );
+  }
 
   function openMain() {
     if (!splash || splash.classList.contains("is-away")) return;
+    var fromThanks = splash.classList.contains("splash--thanks");
+    if (fromThanks) {
+      window.scrollTo(0, 0);
+    }
     splash.classList.add("is-away");
     window.setTimeout(function () {
       splash.setAttribute("hidden", "");
+      resetSplashThanksState();
     }, 850);
   }
 
@@ -259,9 +292,8 @@
 
   const rsvpForm = document.getElementById("rsvp-form");
   const rsvpContent = document.getElementById("rsvp-content");
-  const rsvpSuccess = document.getElementById("rsvp-success");
 
-  if (rsvpForm && rsvpContent && rsvpSuccess) {
+  if (rsvpForm && rsvpContent) {
     rsvpForm.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!rsvpForm.checkValidity()) {
@@ -270,7 +302,7 @@
       }
       myFunction();
       rsvpContent.hidden = true;
-      rsvpSuccess.hidden = false;
+      showSplashThanks();
     });
   }
 })();
