@@ -1,0 +1,5 @@
+# Jekyll (GitHub Pages) — utilisé pour les URLs absolues des aperçus de liens (og:image, etc.)
+# Si vous changez de domaine ou passez en site à la racine, modifiez ces deux lignes puis redéployez.
+title: "Mariage Judith & Jonas"
+url: "https://shisabbah.github.io"
+baseurl: "/judith-jonas"
