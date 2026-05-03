@@ -6,6 +6,7 @@
  * - Exécuter en tant que : Moi (obligatoire pour les invités anonymes ; sinon Spreadsheet peut être indisponible)
  * - Qui a accès : Tout le monde (pour que les invités puissent envoyer sans compte)
  * Copier l’URL /exec dans main.js → GOOGLE_SHEETS_CONFIG.webAppUrl
+ * Le site envoie les données en GET en arrière-plan (fetch), sans ouvrir de page Google chez l’invité.
  *
  * Optionnel — secret anti-spam : Fichier → Paramètres du projet → Propriétés du script
  * Clé : RSVP_SECRET   Valeur : (mot de passe) — la même dans main.js secretToken

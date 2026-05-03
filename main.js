@@ -55,9 +55,8 @@
   }
 
   /**
-   * Envoi vers Apps Script : GET via formulaire vers une fenêtre nommée (navigation complète, pas iframe / pas img).
-   * Les requêtes img (Sec-Fetch-Dest: image) peuvent ne pas exécuter doGet comme un vrai GET « document ».
-   * Un petit onglet affiche « ok » ou « error » — vous pouvez le fermer ; la ligne doit apparaître dans la Sheet.
+   * Envoi vers Apps Script (doGet) en arrière-plan : aucun onglet ni page Google visible.
+   * mode « no-cors » : la réponse n’est pas lisible en JS (Apps Script n’expose pas toujours ACAO), mais le GET est bien exécuté côté serveur.
    */
   function submitToSheets(formEl) {
     var url = GOOGLE_SHEETS_CONFIG.webAppUrl;
@@ -67,12 +66,43 @@
     }
 
     var fd = new FormData(formEl);
-    var baseUrl = url.split("?")[0];
+    var baseUrl = String(url).split("?")[0];
+    var params = new URLSearchParams();
+
+    FIELD_NAMES.forEach(function (name) {
+      var v = fd.get(name);
+      params.append(name, v != null ? String(v) : "");
+    });
+    var tok = GOOGLE_SHEETS_CONFIG.secretToken;
+    if (tok && String(tok).trim() !== "") {
+      params.append("token", String(tok).trim());
+    }
+    params.append("_ts", String(Date.now()));
+
+    var fullUrl = baseUrl + "?" + params.toString();
+
+    if (typeof fetch === "function") {
+      fetch(fullUrl, {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-store",
+        credentials: "omit",
+      }).catch(function () {});
+      return;
+    }
+
+    /* Très vieux navigateur : iframe invisible (pas de fenêtre nommée = pas d’onglet Google). */
+    var iframe = document.createElement("iframe");
+    iframe.name = "jj_gs_rsvp_if_" + Date.now();
+    iframe.style.cssText = "position:absolute;width:0;height:0;border:0;left:-9999px;visibility:hidden;";
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.title = "Envoi RSVP";
+    document.body.appendChild(iframe);
 
     var form = document.createElement("form");
     form.method = "GET";
     form.action = baseUrl;
-    form.target = "jj_gs_rsvp";
+    form.target = iframe.name;
     form.acceptCharset = "UTF-8";
     form.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
     form.setAttribute("aria-hidden", "true");
@@ -88,19 +118,17 @@
     FIELD_NAMES.forEach(function (name) {
       addField(name, fd.get(name));
     });
-    var tok = GOOGLE_SHEETS_CONFIG.secretToken;
     if (tok && String(tok).trim() !== "") {
-      addField("token", tok);
+      addField("token", String(tok).trim());
     }
     addField("_ts", String(Date.now()));
 
     document.body.appendChild(form);
     form.submit();
     window.setTimeout(function () {
-      if (form.parentNode) {
-        form.parentNode.removeChild(form);
-      }
-    }, 0);
+      if (form.parentNode) form.parentNode.removeChild(form);
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+    }, 8000);
   }
 
   var GOOGLE_FORM_CONFIG = {
