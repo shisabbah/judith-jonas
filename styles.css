@@ -79,36 +79,9 @@ button.splash {
   touch-action: manipulation;
 }
 
-/* Photo plein cadre derrière le logo */
-.splash__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 38%;
-  z-index: 0;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* Voile léger pour la lisibilité du monogramme */
-.splash__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    165deg,
-    rgba(249, 247, 242, 0.28) 0%,
-    rgba(61, 43, 31, 0.38) 55%,
-    rgba(37, 28, 22, 0.48) 100%
-  );
-}
-
 .splash__inner {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -149,9 +122,9 @@ button.splash {
   letter-spacing: 0.02em;
   line-height: 1.35;
   text-align: center;
-  color: #fffefb;
-  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.5);
-  max-width: 18ch;
+  color: var(--text);
+  text-shadow: none;
+  max-width: 22ch;
   opacity: 0;
   animation: splash-hint-in 0.65s ease 0.35s forwards;
 }
@@ -236,12 +209,74 @@ button.splash {
   padding: clamp(1.5rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 8vw, 5rem);
 }
 
-/* Décompte — sobre, fusionné au fond (sans carte ni cercles) */
+/* Décompte — chiffres superposés en bas de la photo */
 .countdown {
   position: relative;
   max-width: 560px;
   margin: 0 auto clamp(2.25rem, 6vw, 3.25rem);
   padding: clamp(1.85rem, 5vw, 2.65rem) clamp(0.5rem, 3vw, 1rem);
+}
+
+.countdown__frame {
+  position: relative;
+  width: 100%;
+  max-width: min(420px, 88vw);
+  margin: 0 auto;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(61, 43, 31, 0.14);
+  aspect-ratio: 3 / 4;
+  min-height: clamp(240px, 72vw, 440px);
+}
+
+.countdown__photo-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.countdown__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.countdown__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(37, 28, 22, 0) 28%,
+    rgba(37, 28, 22, 0.35) 62%,
+    rgba(22, 18, 14, 0.72) 100%
+  );
+}
+
+.countdown__card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  text-align: center;
+  padding: clamp(0.85rem, 3.5vw, 1.35rem) clamp(0.35rem, 2.5vw, 0.85rem) clamp(1rem, 3.5vw, 1.35rem);
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.countdown__card::before {
+  display: none;
 }
 
 .countdown::before,
@@ -269,22 +304,6 @@ button.splash {
 
 .countdown::after {
   bottom: 0;
-}
-
-.countdown__card {
-  text-align: center;
-  padding: 0;
-  margin: 0;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  position: relative;
-  overflow: visible;
-}
-
-.countdown__card::before {
-  display: none;
 }
 
 .countdown__grid {
@@ -317,9 +336,9 @@ button.splash {
     background: linear-gradient(
       180deg,
       transparent 0%,
-      rgba(197, 160, 89, 0.18) 25%,
-      rgba(197, 160, 89, 0.22) 50%,
-      rgba(197, 160, 89, 0.18) 75%,
+      rgba(255, 255, 255, 0.22) 25%,
+      rgba(255, 255, 255, 0.28) 50%,
+      rgba(255, 255, 255, 0.22) 75%,
       transparent 100%
     );
   }
@@ -345,10 +364,11 @@ button.splash {
   font-size: clamp(1.65rem, 6.5vw, 2.5rem);
   font-weight: 500;
   line-height: 1;
-  color: var(--text);
+  color: #fffefb;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.03em;
-  opacity: 0.88;
+  opacity: 0.96;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 2px 14px rgba(0, 0, 0, 0.25);
 }
 
 .countdown__label {
@@ -357,8 +377,9 @@ button.splash {
   font-weight: 500;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--text);
-  opacity: 0.38;
+  color: rgba(255, 254, 251, 0.82);
+  opacity: 1;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* Sections invitations */
@@ -416,7 +437,7 @@ button.splash {
   outline: none;
 }
 
-/* Henné : aucun cadre parasite — fusion du papier blanc du PNG avec le fond crème du site */
+/* Henné : fusion du papier blanc du PNG avec le fond crème */
 .invitation-block--henne {
   padding: 0;
   margin-left: auto;
@@ -434,7 +455,6 @@ button.splash {
   vertical-align: top;
   box-shadow: none !important;
   filter: none;
-  /* Blanc du visuel × fond crème → contour / halo blanc atténués (texte reste lisible) */
   mix-blend-mode: multiply;
 }
 

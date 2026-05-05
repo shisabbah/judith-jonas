@@ -30,19 +30,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="preload" href="img.jpg" as="image" />
   </head>
   <body>
     <button type="button" id="splash" class="splash" aria-label="Ouvrir l’invitation" aria-live="polite">
-      <img
-        class="splash__bg"
-        src="img.jpg"
-        alt=""
-        aria-hidden="true"
-        decoding="async"
-        fetchpriority="high"
-        draggable="false"
-      />
-      <span class="splash__scrim" aria-hidden="true"></span>
       <span class="splash__inner">
         <img
           class="splash__logo"
@@ -61,31 +52,47 @@
 
     <main id="main" class="main">
       <section class="countdown" aria-label="Décompte avant le mariage" aria-live="polite">
-        <div class="countdown__card">
-          <div class="countdown__grid">
-            <div class="countdown__unit">
-              <div class="countdown__circle">
-                <span id="cd-days" class="countdown__value">—</span>
+        <div class="countdown__frame">
+          <div class="countdown__photo-wrap">
+            <img
+              class="countdown__photo"
+              src="img.jpg"
+              alt=""
+              width="1080"
+              height="1920"
+              decoding="async"
+              loading="eager"
+              fetchpriority="high"
+              draggable="false"
+            />
+          </div>
+          <div class="countdown__scrim" aria-hidden="true"></div>
+          <div class="countdown__card">
+            <div class="countdown__grid">
+              <div class="countdown__unit">
+                <div class="countdown__circle">
+                  <span id="cd-days" class="countdown__value">—</span>
+                </div>
+                <span class="countdown__label">Jours</span>
               </div>
-              <span class="countdown__label">Jours</span>
-            </div>
-            <div class="countdown__unit">
-              <div class="countdown__circle">
-                <span id="cd-hours" class="countdown__value">—</span>
+              <div class="countdown__unit">
+                <div class="countdown__circle">
+                  <span id="cd-hours" class="countdown__value">—</span>
+                </div>
+                <span class="countdown__label">Heures</span>
               </div>
-              <span class="countdown__label">Heures</span>
-            </div>
-            <div class="countdown__unit">
-              <div class="countdown__circle">
-                <span id="cd-minutes" class="countdown__value">—</span>
+              <div class="countdown__unit">
+                <div class="countdown__circle">
+                  <span id="cd-minutes" class="countdown__value">—</span>
+                </div>
+                <span class="countdown__label">Minutes</span>
               </div>
-              <span class="countdown__label">Minutes</span>
-            </div>
-            <div class="countdown__unit">
-              <div class="countdown__circle">
-                <span id="cd-seconds" class="countdown__value">—</span>
+              <div class="countdown__unit">
+                <div class="countdown__circle">
+                  <span id="cd-seconds" class="countdown__value">—</span>
+                </div>
+                <span class="countdown__label">Secondes</span>
               </div>
-              <span class="countdown__label">Secondes</span>
             </div>
           </div>
         </div>
@@ -169,7 +176,6 @@
             </div>
           </form>
         </div>
-
       </section>
     </main>
 
